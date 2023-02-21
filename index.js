@@ -29,8 +29,12 @@ app.use(bodyParser.json());
 // Rotas
 app.get("/", (req, res) => {
     
-    res.render("index.ejs")
-    
+    // Realizando SELECT das perguntas no MySQL
+    Pergunta.findAll({ raw: true }).then(perguntas => {
+        res.render("index.ejs", {
+            perguntas: perguntas
+        });
+    });  
 });
 
 
@@ -46,7 +50,7 @@ app.post("/salvarpergunta", (req, res) => {
     let titulo = req.body.titulo;
     let descricao = req.body.descricao;
 
-    // Salvando perguntas no Banco de Dados MySQL
+    // Realizando o INSERT das perguntas no Banco de Dados MySQL
     Pergunta.create({
         titulo: titulo,
         descricao: descricao
