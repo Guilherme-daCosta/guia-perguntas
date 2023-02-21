@@ -28,9 +28,8 @@ app.use(bodyParser.json());
 
 
 // Rotas
-app.get("/", (req, res) => {
+app.get("/", (req, res) => { // Realizando SELECT das perguntas no MySQL
 
-    // Realizando SELECT das perguntas no MySQL
     Pergunta.findAll({
         raw: true, order: [
             ['id', 'DESC'] // Realizando ORDER BY -- ASC = Crescente || DESC = Decrescente
@@ -43,19 +42,19 @@ app.get("/", (req, res) => {
 });
 
 
-app.get("/perguntar", (req, res) => {
+app.get("/perguntar", (req, res) => { // Página perguntar
 
     res.render("perguntar");
 
 });
 
 
-app.post("/salvarpergunta", (req, res) => {
+
+app.post("/salvarpergunta", (req, res) => { // Realizando o INSERT das perguntas no Banco de Dados MySQL
 
     let titulo = req.body.titulo;
     let descricao = req.body.descricao;
 
-    // Realizando o INSERT das perguntas no Banco de Dados MySQL
     Pergunta.create({
         titulo: titulo,
         descricao: descricao
@@ -66,26 +65,38 @@ app.post("/salvarpergunta", (req, res) => {
 });
 
 
-app.get("/pergunta/:id", (req, res) => {
+app.get("/pergunta/:id", (req, res) => { // Realizando SELECT com WHERE no MySQL
 
     let id = req.params.id;
 
-    // Realizando SELECT com WHERE no MySQL
-    Pergunta.findOne({
-        where: { id: id }
-    }).then(pergunta => {
+    Pergunta.findOne({ where: { id: id } })
+        .then(pergunta => {
 
-        if (pergunta != undefined) { // Pergunta encontrada
-            res.render("pergunta.ejs", {
-                pergunta: pergunta
-            });
-        } else { // Não encontrada
-            res.redirect("/");
-        }
+            if (pergunta != undefined) { // Pergunta encontrada
+                res.render("pergunta.ejs", {
+                    pergunta: pergunta
+                });
+            } else { // Não encontrada
+                res.redirect("/");
+            }
 
-    })
-
+        })
 });
+
+
+app.post("/responder", (req, res) => { // Realizando INSERT das respostas no MySQL
+
+    let perguntaId = req.body.pergunta;
+    let corpo = req.body.corpo
+
+    Resposta.create({
+        corpo: corpo,
+        perguntaId: perguntaId
+    }).then(() => {
+        res.redirect("/pergunta/" + perguntaId);
+    });
+
+})
 
 
 app.listen(8080, () => {
