@@ -3,6 +3,7 @@ const app = express();
 const bodyParser = require("body-parser");
 const connection = require("./database/database");
 const Pergunta = require("./database/Pergunta");
+const Resposta = require("./database/Resposta");
 
 
 // Database
@@ -73,6 +74,7 @@ app.get("/pergunta/:id", (req, res) => {
     Pergunta.findOne({
         where: { id: id }
     }).then(pergunta => {
+
         if (pergunta != undefined) { // Pergunta encontrada
             res.render("pergunta.ejs", {
                 pergunta: pergunta
@@ -80,6 +82,7 @@ app.get("/pergunta/:id", (req, res) => {
         } else { // Não encontrada
             res.redirect("/");
         }
+
     })
 
 });

@@ -1,6 +1,5 @@
-const { Sequelize } = require('sequelize');
-const sequelize = require('sequelize');
-const connection = require('./database');
+const Sequelize = require("sequelize");
+const connection = require("./database");
 
 const Pergunta = connection.define('perguntas', {
     titulo: {
@@ -8,7 +7,7 @@ const Pergunta = connection.define('perguntas', {
         allowNull: false
     },
     descricao: {
-        type: sequelize.TEXT,
+        type: Sequelize.TEXT,
         allowNull: false
     }
 });
