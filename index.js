@@ -46,6 +46,7 @@ app.post("/salvarpergunta", (req, res) => {
     let titulo = req.body.titulo;
     let descricao = req.body.descricao;
 
+    // Salvando perguntas no Banco de Dados MySQL
     Pergunta.create({
         titulo: titulo,
         descricao: descricao
