@@ -30,7 +30,9 @@ app.use(bodyParser.json());
 app.get("/", (req, res) => {
     
     // Realizando SELECT das perguntas no MySQL
-    Pergunta.findAll({ raw: true }).then(perguntas => {
+    Pergunta.findAll({ raw: true, order: [
+        ['id', 'DESC'] // Realizando ORDER BY -- ASC = Crescente || DESC = Decrescente
+    ] }).then(perguntas => {
         res.render("index.ejs", {
             perguntas: perguntas
         });
