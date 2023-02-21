@@ -69,17 +69,24 @@ app.get("/pergunta/:id", (req, res) => { // Realizando SELECT com WHERE no MySQL
 
     let id = req.params.id;
 
-    Pergunta.findOne({ where: { id: id } })
-        .then(pergunta => {
+    Pergunta.findOne({ 
+        where: { id: id } 
+    }).then(pergunta => {
 
             if (pergunta != undefined) { // Pergunta encontrada
-                res.render("pergunta.ejs", {
-                    pergunta: pergunta
-                });
+
+                Resposta.findAll({ // Procurando respostas e ordenando no MySQL
+                    where: {perguntaId: pergunta.id},
+                    order: [ ['id', 'DESC'] ]
+                }).then(respostas => {
+                    res.render("pergunta.ejs", {
+                        pergunta: pergunta,
+                        respostas: respostas
+                    });
+                });                
             } else { // Não encontrada
                 res.redirect("/");
             }
-
         })
 });
 
