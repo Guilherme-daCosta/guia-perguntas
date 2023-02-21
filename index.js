@@ -22,21 +22,23 @@ app.use(express.static('public'));
 
 
 // Body Parser
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 
 // Rotas
 app.get("/", (req, res) => {
-    
+
     // Realizando SELECT das perguntas no MySQL
-    Pergunta.findAll({ raw: true, order: [
-        ['id', 'DESC'] // Realizando ORDER BY -- ASC = Crescente || DESC = Decrescente
-    ] }).then(perguntas => {
+    Pergunta.findAll({
+        raw: true, order: [
+            ['id', 'DESC'] // Realizando ORDER BY -- ASC = Crescente || DESC = Decrescente
+        ]
+    }).then(perguntas => {
         res.render("index.ejs", {
             perguntas: perguntas
         });
-    });  
+    });
 });
 
 
@@ -59,6 +61,26 @@ app.post("/salvarpergunta", (req, res) => {
     }).then(() => {
         res.redirect("/");
     });
+
+});
+
+
+app.get("/pergunta/:id", (req, res) => {
+
+    let id = req.params.id;
+
+    // Realizando SELECT com WHERE no MySQL
+    Pergunta.findOne({
+        where: { id: id }
+    }).then(pergunta => {
+        if (pergunta != undefined) { // Pergunta encontrada
+            res.render("pergunta.ejs", {
+                pergunta: pergunta
+            });
+        } else { // Não encontrada
+            res.redirect("/");
+        }
+    })
 
 });
 
